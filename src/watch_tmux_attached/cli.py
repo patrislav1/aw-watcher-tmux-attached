@@ -43,17 +43,22 @@ def main():
         format='%(levelname)7s: %(message)s',
         level=[logging.WARNING, logging.INFO, logging.DEBUG][verbosity]
     )
+    log = logging.getLogger('aw-watcher-tmux-attached')
 
     signal.signal(signal.SIGTERM, sigterm_handler)
 
-    tracker = SessionTracker(testing=True)
+    tracker = SessionTracker(testing=args.testing)
 
-    with tracker.aw_client:
-        while not terminate:
-            tracker.update()
+    try:
+        with tracker.aw_client:
+            while not terminate:
+                tracker.update()
+                time.sleep(POLL_INTERVAL)
+    except KeyboardInterrupt:
+        log.info('Interrupted')
 
-        time.sleep(POLL_INTERVAL)
+    log.info('Terminated')
+
 
 if __name__ == '__main__':
     main()
-
