@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-import signal
 import libtmux
 from datetime import datetime
-import time
 from datetime import datetime, timezone
 from aw_core.models import Event
 from aw_client import ActivityWatchClient
+
+import logging as log
 
 CLIENTNAME = 'tmux-attached'
 BUCKETNAME = CLIENTNAME
@@ -14,15 +14,7 @@ EVENTTYPE = 'tmux.sessions.attached'
 POLL_INTERVAL = 10
 PULSETIME_INTERVAL = 15
 
-terminate = False
-
-
-def sigterm_handler(signal, frame):
-    global terminate
-    terminate = True
-
-
-signal.signal(signal.SIGTERM, sigterm_handler)
+l = log.getLogger('aw-watcher-tmux-attached')
 
 
 class SessionTracker():
@@ -53,13 +45,3 @@ class SessionTracker():
             queued=True,
         )
 
-
-tracker = SessionTracker(testing=True)
-
-with tracker.aw_client:
-    while not terminate:
-        tracker.update()
-
-        time.sleep(POLL_INTERVAL)
-
-print('Terminated')

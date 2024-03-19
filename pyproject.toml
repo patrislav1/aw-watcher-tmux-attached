@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aw-watcher-tmux-attached"
+version = "0.0.1"
+authors = [
+  { name="Patrick Huesmann", email="info@patrick-huesmann.de" },
+]
+description = "ActivityWatch watcher for attached Tmux sessions"
+readme = "README.md"
+requires-python = ">=3.6"
+dependencies = [
+  "libtmux",
+  "aw_client"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/patrislav1/aw-watcher-tmux-attached"
+
+[project.scripts]
+aw-watcher-tmux-attached = "watch_tmux_attached.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/watch_tmux_attached"]
